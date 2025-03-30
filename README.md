@@ -93,7 +93,15 @@ The required variables are:
 
 After calculating pulse_us in the interrupt, the flag is set to true to notify the main loop. The main loop waits for this flag, calculates the distance by dividing pulse_us by 148 to get inches, resets the flag to false, and adds a 200 ms delay to prevent CPU overload.
 
+------
 
+An example will be shown where the ultrasonic sensor (USS) is placed approximately 11 inches away from the monitor. Since the sensor is being held by hand, there may be slight errors due to hand movement.
+
+The sensor is generally accurate, but during testing, it was observed that it struggles to read distances accurately from flat surfaces, likely because of poor reflection from the TX. This issue is more noticeable when measuring against convex surfaces, where the reflected signal may not return directly to the RX, causing inconsistent results.
+
+<img src="https://github.com/user-attachments/assets/46b8176c-c39a-4bb6-bd0c-31e9beaae13c" height="50%" width="30%" alt="Disk Sanitization Steps"/>
+
+<img src="https://github.com/user-attachments/assets/bf90565d-c055-4e88-b519-7537c29cfc3c" height="50%" width="80%" alt="Disk Sanitization Steps"/>
 
 
 
