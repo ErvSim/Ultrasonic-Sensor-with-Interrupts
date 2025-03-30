@@ -45,4 +45,55 @@ Per the datasheet:
 
 To convert this duration into distance in inches, the pulse duration is divided by 148.
 
-How we do this in code is simple. First, we created a user function 
+How we do this in code is simple. First, we created a user function called trigger_pulse(uint pin) which:
+
+- Sets pin 16 to HIGH.
+
+- Waits for 10 µs.
+
+- Sets pin 16 back to LOW.
+
+- Waits 20 µs (for stability before starting with the Echo pin).
+
+To enable the interrupt, we use the following line: gpio_set_irq_enabled_with_callback(17, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, gpio_callback_function); 
+
+Here’s how this function works:
+
+- Pin 17 (Echo pin) is set to trigger the interrupt.
+
+- The event is set to trigger on either a rising edge or a falling edge.
+
+- The interrupt is enabled.
+
+- When an interrupt occurs, a pointer to the callback function gpio_callback_function is called to handle the event. We use a pointer rather then directly calling it because we do not want it to go into the function immediately. we just give it the address and once the interrupt is triggered, it calls then fucntion
+  
+---------
+
+<img src="https://github.com/user-attachments/assets/a959d82b-45c3-40ce-827f-681a232407f0" height="50%" width="100%" alt="Disk Sanitization Steps"/>
+
+The gpio_callback_function is a user-defined function, but the arguments must be uint and uint32_t because the Pico SDK is hardcoded to pass the pin number and event type when an interrupt occurs.
+
+Even though we are only using pin 17, it’s good practice to check if (gpio == 17) in case multiple pins use interrupts in future projects.
+
+When a rising edge is detected, we store the current time in start_time, and when a falling edge occurs, we store the time in end_time. These values are captured using get_absolute_time().
+
+Since interrupts work asynchronously, we use global variables to allow both the main loop and the interrupt to access these values. They are also marked as volatile to prevent the compiler from caching them, ensuring that the most up-to-date values are used.
+
+The required variables are:
+
+- start_time → Stores time when Echo goes HIGH.
+
+- end_time → Stores time when Echo goes LOW.
+
+- pulse_us → Holds pulse duration (end - start).
+
+- interrupt_flag → Indicates when a measurement is ready.
+
+<img src="https://github.com/user-attachments/assets/1c782ec6-8cbe-49d2-8fa4-d737f5a10755" height="50%" width="50%" alt="Disk Sanitization Steps"/>
+
+After calculating pulse_us in the interrupt, the flag is set to true to notify the main loop. The main loop waits for this flag, calculates the distance by dividing pulse_us by 148 to get inches, resets the flag to false, and adds a 200 ms delay to prevent CPU overload.
+
+
+
+
+
