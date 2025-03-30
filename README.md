@@ -1,1 +1,1 @@
-# Ultrasonic-Sensor-with-Interrupts
+This project uses an HC-SR04 ultrasonic sensor with a Raspberry Pi Pico to measure distance by calculating the duration of an ultrasonic pulse that travels to an object and reflects back. For this project, interrupts were used.
