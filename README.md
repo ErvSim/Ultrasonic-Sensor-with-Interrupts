@@ -43,6 +43,11 @@ Per the datasheet:
 
 - The time duration between the moment Echo goes HIGH and when it goes LOW again is captured. This duration is calculated as end_time - start_time.
 
+We can see this a visual picture of how this should work shown below
+
+
+<img src="https://github.com/user-attachments/assets/c2b981e1-c299-4c9b-b159-678402b21e6c" height="50%" width="80%" alt="Disk Sanitization Steps"/>
+
 To convert this duration into distance in inches, the pulse duration is divided by 148.
 
 How we do this in code is simple. First, we created a user function called trigger_pulse(uint pin) which:
